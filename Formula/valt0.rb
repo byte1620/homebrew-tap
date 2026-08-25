@@ -1,7 +1,7 @@
 class Valt0 < Formula
   desc "Encrypted secrets vault with background sync daemon"
   homepage "https://valt0.com"
-  version "0.0.24-pre"
+  version "0.0.25-pre"
   license "MIT"
 
   on_arm do
