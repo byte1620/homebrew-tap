@@ -6,7 +6,7 @@ class Valt0 < Formula
 
   on_arm do
     url "https://dl.valt0.com/v1/#{version}/valt0-darwin-arm64.zip"
-    sha256 "ce8d61a5390223ba02877e663c784f2e7d9033392d77c6983e7a87cdee537a9a"
+    sha256 "4741587cd6a2b2da0fb1253c0eff2c689e8230e3ffe24226107352cf56477399"
   end
 
   # on_intel do
