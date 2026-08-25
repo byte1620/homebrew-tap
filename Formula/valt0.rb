@@ -17,13 +17,19 @@ class Valt0 < Formula
   depends_on macos: :ventura
 
   livecheck do
-    url :stable
-    strategy :github_latest
+  url "https://dl.valt0.com/v1/"
+    regex(%r{href=.*?v?(\d+(?:\.\d+)+(?:-pre)?)/}i)
   end
-
+  
   def install
-    libexec.install "valt0.app"
-    bin.install_symlink libexec/"valt0.app/Contents/MacOS/valt0"
+    if (buildpath/"Contents/MacOS").directory?
+      (libexec/"valt0.app").install Dir["*"]
+    else
+      libexec.install "valt0.app"
+    end
+
+    rm_rf libexec/"valt0.app/__MACOSX"
+    bin.write_exec_script libexec/"valt0.app/Contents/MacOS/valt0"
   end
 
   service do
