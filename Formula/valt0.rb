@@ -30,44 +30,49 @@ class Valt0 < Formula
 
     rm_rf libexec/"valt0.app/__MACOSX"
     bin.write_exec_script libexec/"valt0.app/Contents/MacOS/valt0"
-  (prefix/"com.byte1620.valt0.plist").write <<~XML
-  <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>AssociatedBundleIdentifiers</key>
-	<array>
-    	<string>com.byte1620.valt0</string>
-	</array>
-	<key>KeepAlive</key>
-	<dict>
-		<key>SuccessfulExit</key>
-		<false/>
-	</dict>
-	<key>Label</key>
-	<string>com.byte1620.valt0</string>
-	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-		<string>Background</string>
-		<string>LoginWindow</string>
-		<string>StandardIO</string>
-		<string>System</string>
-	</array>
-	<key>ProcessType</key>
-	<string>Background</string>
-	<key>ProgramArguments</key>
-	<array>
-		<string>valt0</string>
-		<string>agent</string>
-	</array>
-	<key>RunAtLoad</key>
-	<true/>
-	<key>TimeOut</key>
-	<integer>10</integer>
-</dict>
-</plist>
-  XML
+ 
+      def install
+    if (buildpath/"Contents/MacOS").directory?
+      (libexec/"valt0.app").install Dir["*"]
+    else
+      libexec.install "valt0.app"
+    end
+
+    rm_rf libexec/"valt0.app/__MACOSX"
+    bin.write_exec_script libexec/"valt0.app/Contents/MacOS/valt0"
+
+    (prefix/"com.byte1620.valt0.plist").write <<~XML
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>AssociatedBundleIdentifiers</key>
+        <array>
+          <string>com.byte1620.valt0</string>
+        </array>
+        <key>KeepAlive</key>
+        <dict>
+          <key>SuccessfulExit</key>
+          <false/>
+        </dict>
+        <key>Label</key>
+        <string>com.byte1620.valt0</string>
+        <key>ProcessType</key>
+        <string>Background</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_libexec}/valt0.app/Contents/MacOS/valt0</string>
+          <string>agent</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/valt0.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/valt0.log</string>
+      </dict>
+      </plist>
+    XML
   end
 
   service do
