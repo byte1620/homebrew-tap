@@ -74,6 +74,7 @@ class Valt0 < Formula
       </plist>
     XML
   end
+end
 
   service do
     name macos: "com.byte1620.valt0"
