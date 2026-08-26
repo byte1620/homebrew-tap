@@ -17,21 +17,11 @@ class Valt0 < Formula
   depends_on macos: :ventura
 
   livecheck do
-  url "https://dl.valt0.com/v1/"
+    url "https://dl.valt0.com/v1/"
     regex(%r{href=.*?v?(\d+(?:\.\d+)+(?:-pre)?)/}i)
   end
-  
-  def install
-    if (buildpath/"Contents/MacOS").directory?
-      (libexec/"valt0.app").install Dir["*"]
-    else
-      libexec.install "valt0.app"
-    end
 
-    rm_rf libexec/"valt0.app/__MACOSX"
-    bin.write_exec_script libexec/"valt0.app/Contents/MacOS/valt0"
- 
-      def install
+  def install
     if (buildpath/"Contents/MacOS").directory?
       (libexec/"valt0.app").install Dir["*"]
     else
@@ -74,7 +64,6 @@ class Valt0 < Formula
       </plist>
     XML
   end
-end
 
   service do
     name macos: "com.byte1620.valt0"
