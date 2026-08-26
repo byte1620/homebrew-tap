@@ -33,7 +33,7 @@ class Valt0 < Formula
   end
 
   service do
-    name macos: "com.byte1620.valt0",
+    name macos: "com.byte1620.valt0"
     run [opt_libexec/"valt0.app/Contents/MacOS/valt0", "agent"]
     run_type :immediate
     keep_alive successful_exit: false
