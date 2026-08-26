@@ -30,15 +30,11 @@ class Valt0 < Formula
 
     rm_rf libexec/"valt0.app/__MACOSX"
     bin.write_exec_script libexec/"valt0.app/Contents/MacOS/valt0"
+    prefix.install "com.byte1620.valt0.plist"
   end
 
   service do
     name macos: "com.byte1620.valt0"
-    run [opt_libexec/"valt0.app/Contents/MacOS/valt0", "agent"]
-    run_type :immediate
-    keep_alive successful_exit: false
-    restart_delay 10
-    process_type :background
   end
 
   def caveats
