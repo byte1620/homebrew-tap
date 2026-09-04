@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.0.50-pre"
-  sha256 arm:   "4d853624ec06530c99693aea693e834b719ea4332b85460fda5ab81cae14f551",
-         intel: "211641a06c978ed49ca316bc977349b93d43c454947bd301aeb30d9deb6e9998"
+  version "0.0.51-pre"
+  sha256 arm:   "5170cfad33d61bad94f87082b7adb0c0c6820370ed418ac1303c36f4ccfd4ac7",
+         intel: "933d1bdb8af4256abe7f93c481f8aaf61ded0d1a6c96d8c0b9e73ac61035e66b"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip",
       verified: "dl.valt0.com/"
@@ -19,8 +19,6 @@ cask "valt0" do
 
   depends_on macos: ">= :ventura"
 
-  conflicts_with formula: "valt0"
-
   app    "valt0.app"
   binary "#{appdir}/valt0.app/Contents/MacOS/valt0"
 
@@ -35,19 +33,6 @@ cask "valt0" do
     unless File.exist?(helper)
       opoo "valt0-agent helper is missing from the app bundle; service not started."
       next
-    end
-
-    # Migration: the old formula installed a plist under the same label, so both
-    # jobs would contend. Remove it, but only if it points into the Homebrew
-    # prefix -- never touch a plist a user wrote by hand.
-    legacy = File.expand_path("~/Library/LaunchAgents/com.byte1620.valt0.plist")
-    if File.exist?(legacy) && File.read(legacy).include?("/libexec/valt0.app")
-      ohai "Removing the launchd job left over from the valt0 formula."
-      system_command "/bin/launchctl",
-                     args:         ["bootout", "gui/#{Process.uid}/com.byte1620.valt0"],
-                     must_succeed: false,
-                     print_stderr: false
-      File.delete(legacy)
     end
 
     result = system_command helper,
