@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.0.52-pre"
-  sha256 arm:   "43dcc7daada7886bd9a0b2b4af60474c45f58ec13c3a411befaac0b020d28949",
-         intel: "fc38131f0c8e1915cd37b725b09c818bc8c137b39ca4e807ffcaf1d211034fe3"
+  version "0.0.53-pre"
+  sha256 arm:   "9e9f2ddce4852115d01eb2f17052b1f107b1ce1ebc057d4d73043c40ce4b0303",
+         intel: "b65ea25d9bfdc4702a6c6735005d7161a502b226112253ee48e37828ef3787ac"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip",
       verified: "dl.valt0.com/"
@@ -17,7 +17,7 @@ cask "valt0" do
     strategy :page_match
   end
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app    "valt0.app"
   binary "#{appdir}/valt0.app/Contents/MacOS/valt0"
