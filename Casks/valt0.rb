@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.0.51-pre"
-  sha256 arm:   "5170cfad33d61bad94f87082b7adb0c0c6820370ed418ac1303c36f4ccfd4ac7",
-         intel: "933d1bdb8af4256abe7f93c481f8aaf61ded0d1a6c96d8c0b9e73ac61035e66b"
+  version "0.0.52-pre"
+  sha256 arm:   "43dcc7daada7886bd9a0b2b4af60474c45f58ec13c3a411befaac0b020d28949",
+         intel: "fc38131f0c8e1915cd37b725b09c818bc8c137b39ca4e807ffcaf1d211034fe3"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip",
       verified: "dl.valt0.com/"
@@ -68,14 +68,4 @@ cask "valt0" do
     "~/Library/Preferences/com.byte1620.valt0.plist",
     "~/Library/LaunchAgents/com.byte1620.valt0.plist",
   ]
-
-  caveats <<~EOS
-    valt0's background service has been enabled and starts at login.
-
-    Open valt0 from your Applications folder to check whether it is
-    running, or to turn it off. It can also be toggled in System
-    Settings, under General > Login Items & Extensions.
-
-    `brew services` no longer manages valt0.
-  EOS
 end
