@@ -1,17 +1,17 @@
 class Valt0 < Formula
   desc "Encrypted secrets vault with background sync daemon"
   homepage "https://valt0.com"
-  version "0.0.47-pre"
+  version "0.0.48-pre"
   license "MIT"
 
   on_arm do
     url "https://dl.valt0.com/v1/#{version}/valt0-darwin-arm64.zip"
-    sha256 "2f20c18bf1e524135a0724a91076fafe0fbc824103b009a044c1f2df9283fdad"
+    sha256 "4fe1e94807efd95dee50a7400ec7edc2d7b060ea898eecb1f6df23d0e53402c0"
   end
 
   on_intel do
     url "https://dl.valt0.com/v1/#{version}/valt0-darwin-amd64.zip"
-    sha256 "9b57181b3a38d0470224d718876b9af9466ea45d98346de7299357c3af754457"
+    sha256 "293ea7e24bd87e0b49f088d2f2bd6ba89a082162e854dde60b872d879a1c2eeb"
   end
 
   depends_on macos: :ventura
