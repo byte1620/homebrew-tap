@@ -1,12 +1,11 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.0.55-pre"
-  sha256 arm:   "1b6b80c9e490995afea44e8fc5e5de09fe82775ff7b9d09a6dcca72362aea17e",
-         intel: "9fd6d7d981cafa84c39605aa99de518da41af9139f699880cbbda1a9b70e406c"
+  version "0.0.56-pre"
+  sha256 arm:   "2e8a2a1b34da5c9d9cd7a09c7d9242333141b771ba9e56c877ce056d84831b9a",
+         intel: "a2ca2cca4a91c6cdc432c6e27936ad58362a7e3f48e4db76a71e040a3a55f3da"
 
-  url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip",
-      verified: "dl.valt0.com/"
+  url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip"
   name "Valt0"
   desc "Encrypted secrets vault with background sync daemon"
   homepage "https://valt0.com"
@@ -22,50 +21,31 @@ cask "valt0" do
   app    "valt0.app"
   binary "#{appdir}/valt0.app/Contents/MacOS/valt0"
 
-  postflight do
-    if ENV["HOMEBREW_VALT0_NO_SERVICE"]
-      opoo "Skipping background service setup (HOMEBREW_VALT0_NO_SERVICE is set)."
-      next
-    end
-
-    helper = "#{appdir}/valt0.app/Contents/MacOS/valt0-agent"
-
-    unless File.exist?(helper)
-      opoo "valt0-agent helper is missing from the app bundle; service not started."
-      next
-    end
-
-    result = system_command helper,
-                            args:         ["ensure"],
-                            must_succeed: false,
-                            print_stderr: false
-
-    case result.stdout.strip
-    when "enabled"
-      ohai "valt0 background service is running."
-    when "requires-approval"
-      opoo "valt0 is installed but its background service is turned off. " \
-           "Enable it in System Settings > General > Login Items & Extensions."
-    when "not-found"
-      opoo "valt0's agent plist is missing from the app bundle -- this is a " \
-           "packaging bug. Please report it at https://valt0.com."
-    else
-      opoo "Could not start the valt0 background service: #{result.stderr.strip}"
-      opoo "Open valt0 from your Applications folder to enable it."
+  postflight_steps do
+    if_path_exists "valt0.app/Contents/MacOS/valt0-agent", base: :appdir do
+      run "valt0.app/Contents/MacOS/valt0-agent",
+          args:         ["ensure", "--homebrew"],
+          base:         :appdir,
+          must_succeed: false,
+          print_stdout: true
     end
   end
 
-  uninstall_preflight do
-    helper = "#{appdir}/valt0.app/Contents/MacOS/valt0-agent"
-    system_command(helper, args: ["unregister"], must_succeed: false) if File.exist?(helper)
+  uninstall_preflight_steps do
+    if_path_exists "valt0.app/Contents/MacOS/valt0-agent", base: :appdir do
+      run "valt0.app/Contents/MacOS/valt0-agent",
+          args:         ["unregister"],
+          base:         :appdir,
+          must_succeed: false
+    end
   end
 
   uninstall launchctl: "com.byte1620.valt0"
 
   zap trash: [
     "~/Library/Application Support/valt0",
+    "~/Library/LaunchAgents/com.byte1620.valt0.plist",
     "~/Library/Logs/valt0",
     "~/Library/Preferences/com.byte1620.valt0.plist",
-    "~/Library/LaunchAgents/com.byte1620.valt0.plist",
   ]
 end
