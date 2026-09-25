@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.0.56-pre"
-  sha256 arm:   "2e8a2a1b34da5c9d9cd7a09c7d9242333141b771ba9e56c877ce056d84831b9a",
-         intel: "a2ca2cca4a91c6cdc432c6e27936ad58362a7e3f48e4db76a71e040a3a55f3da"
+  version "0.0.57-pre"
+  sha256 arm:   "d3be1b17fe66b27332c5543a3e816743d565aa01110756dbe99ba274f56fc50a",
+         intel: "6779d6d0750e49efc04cd6750d39438d31717da1718ac7fba16c5d51c4a0bd79"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip"
   name "Valt0"
@@ -18,29 +18,72 @@ cask "valt0" do
 
   depends_on macos: :ventura
 
-  app    "valt0.app"
+  generated_script "valt0-install.sh", content: <<~SH
+    #!/bin/sh
+    set -eu
+
+    src="#{staged_path}/valt0.app"
+    dst="#{appdir}/valt0.app"
+
+    if [ -e "$dst" ]; then
+      echo "Error: $dst already exists (not installed by this cask)." >&2
+      echo "Move it to the Trash, then run the install again." >&2
+      exit 1
+    fi
+
+    mkdir -p "#{appdir}"
+    /usr/bin/ditto "$src" "$dst"
+
+    if [ -n "${HOMEBREW_VALT0_NO_SERVICE:-}" ]; then
+      echo "==> Skipping background service setup (HOMEBREW_VALT0_NO_SERVICE is set)."
+      exit 0
+    fi
+
+    agent="$dst/Contents/MacOS/valt0-agent"
+    if [ ! -x "$agent" ]; then
+      echo "Warning: valt0-agent is missing from the app bundle; service not started." >&2
+      exit 0
+    fi
+
+    # A failed registration must not fail the install: the app is in place
+    # and the user can enable the service from its window.
+    err="$(mktemp)"
+    status="$("$agent" ensure 2>"$err")" || true
+
+    case "$status" in
+      enabled)
+        echo "==> valt0 background service is running."
+        ;;
+      requires-approval)
+        echo "Warning: valt0 is installed but its background service is turned off." >&2
+        echo "Enable it in System Settings > General > Login Items & Extensions." >&2
+        ;;
+      *)
+        echo "Warning: could not start the valt0 background service: $(cat "$err")" >&2
+        echo "Open valt0 from your Applications folder and click \\"Enable Service\\"." >&2
+        ;;
+    esac
+    rm -f "$err"
+  SH
+
+  generated_script "valt0-uninstall.sh", content: <<~SH
+    #!/bin/sh
+    agent="#{appdir}/valt0.app/Contents/MacOS/valt0-agent"
+    if [ -x "$agent" ]; then
+      "$agent" unregister >/dev/null 2>&1 || true
+    fi
+    exit 0
+  SH
+
+  installer script: "valt0-install.sh"
   binary "#{appdir}/valt0.app/Contents/MacOS/valt0"
 
-  postflight_steps do
-    if_path_exists "valt0.app/Contents/MacOS/valt0-agent", base: :appdir do
-      run "valt0.app/Contents/MacOS/valt0-agent",
-          args:         ["ensure", "--homebrew"],
-          base:         :appdir,
-          must_succeed: false,
-          print_stdout: true
-    end
-  end
-
-  uninstall_preflight_steps do
-    if_path_exists "valt0.app/Contents/MacOS/valt0-agent", base: :appdir do
-      run "valt0.app/Contents/MacOS/valt0-agent",
-          args:         ["unregister"],
-          base:         :appdir,
-          must_succeed: false
-    end
-  end
-
-  uninstall launchctl: "com.byte1620.valt0"
+  uninstall launchctl: "com.byte1620.valt0",
+            script:    {
+              executable:   "valt0-uninstall.sh",
+              must_succeed: false,
+            },
+            delete:    "#{appdir}/valt0.app"
 
   zap trash: [
     "~/Library/Application Support/valt0",
