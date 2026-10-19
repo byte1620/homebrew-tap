@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "1.0.4"
-  sha256 arm:   "0e8e3764398c8bce33b0ac506e1cd2e63aaf20d7ca90a071385e1671746a9f1e",
-         intel: "13cca616effd8441807ebf5580e9f844f5014058c6aeaf6e0a8eaf2cc0d1d38b"
+  version "1.1.0"
+  sha256 arm:   "39a6c07fdf85e1a44e657ce646c535ec3f76cee82fef460292a7586c6bab15e4",
+         intel: "31c5692cbf50f8dbb3b7941d571b0031f6958169e09182b3ae0adebab73e8fbb"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip"
   name "Valt0"
