@@ -1,9 +1,9 @@
 cask "valt0" do
   arch arm: "arm64", intel: "amd64"
 
-  version "1.1.1"
-  sha256 arm:   "25cae0a2d0c8a461e3e8b202a99c1f180472b83eae7dd78e8c3c877dea877ea2",
-         intel: "eef03eb936447586732fad4676619d38dd054b7ee83642ff15a639f3f68458a2"
+  version "1.2.0"
+  sha256 arm:   "6001877069e81a6f06bda14ad14990e04f6fce3a4c06797aaa674bcb21ce4902",
+         intel: "cde5ff75d401985222a3d938dff1fcdce87f2314992695e4d386481a8bedff09"
 
   url "https://dl.valt0.com/v1/#{version}/valt0-darwin-#{arch}.zip"
   name "Valt0"
@@ -60,7 +60,7 @@ cask "valt0" do
         ;;
       *)
         echo "Warning: could not start the valt0 background service: $(cat "$err")" >&2
-        echo "Open valt0 from your Applications folder and click \\"Enable Service\\"." >&2
+        echo "Open valt0 from your Applications folder and tick \\"Start Valt0 when I log in\\"." >&2
         ;;
     esac
     rm -f "$err"
